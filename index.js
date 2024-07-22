@@ -5,8 +5,8 @@ const koaStatic = require('koa-static');
 const path = require('path');
 const app = new koa();
 const vm = require('vm');
-const rpcClient = require('./service/detail/client');
-const server = require('./service/detail/index');
+const rpcClient = require('./service/client/detail');
+const server = require('./service/server/index');
 // const detailService = require('./service/detail/index.js');
 /*
 管理静态资源，简单来说就是从哪一层进行查找

@@ -1,4 +1,4 @@
-const RPC = require('../../rpc-server');
+const RPC = require('./rpc-server');
 
 module.exports = (protobufRequestSchema, protobufResponseSchema) => {
     console.log('Creating RPC Server Instance ...');

@@ -1,8 +1,8 @@
 const fs = require('fs');
 const protobuf = require('protocol-buffers');
-const schemas = protobuf(fs.readFileSync(`${__dirname}/../detail/proto/detail.proto`));
+const schemas = protobuf(fs.readFileSync(`${__dirname}/../proto/detail.proto`));
 
-const server = require('./server/index')(schemas.DetailRequest, schemas.DetailResponse);
+const server = require('./detail')(schemas.DetailRequest, schemas.DetailResponse);
 console.log('Loading Service ??????');
 module.exports = () => {
     console.log('1> Creating Server ....');
@@ -16,4 +16,4 @@ module.exports = () => {
     }).listen(4000, () => {
         console.log(`SERVER IS RUNNING ON PORT:>>>>>`);
     })    
-}
+};
