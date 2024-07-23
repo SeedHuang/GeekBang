@@ -4,8 +4,8 @@ module.exports = (protobufRequestSchema, protobufResponseSchema) => {
     console.log('Creating RPC Server Instance ...');
     return new RPC({
         decodeRequest(buffer) {
+            console.log('decode Reqest in server...');
             const seq = buffer.readUInt32BE(); // 在没有参数逇情况，相当于参数为0，意思就是说，读第一个UInt32
-            console.log('buffer content:', buffer);
             return {
                 seq,
                 result: protobufRequestSchema.decode(buffer.slice(8))

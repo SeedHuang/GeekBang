@@ -18,4 +18,14 @@ else
     echo "No node process found listening on port 4000"  
 fi
 
+pid3=$(lsof -tiTCP:5233 | xargs -I {} sudo lsof -p {} | grep node | awk 'NR==1 {print $2}')  
+  
+# 如果 pid 变量被正确设置，则输出 pid2  
+if [ -n "$pid3" ]; then  
+    echo "PID: $pid3"  
+    kill -9 $pid3
+else  
+    echo "No node process found listening on port 5233"  
+fi
+
 nodemon index.js

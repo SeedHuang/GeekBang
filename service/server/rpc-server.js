@@ -8,9 +8,7 @@ module.exports = class RPC {
     }
     createServer(callback) {
         let buffer = null;
-        console.log('CREATING SERVER: >>>>>>>>>');
         const tcpServer = net.createServer(socket => {
-            
             socket.on('data', data => {
                 console.log('SERVER has got data')
                 // 不断地拼接buff
