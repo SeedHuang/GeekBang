@@ -8,11 +8,40 @@
   "scripts": {
     "start": "sh ./start.sh"
   },
+  "config": {
+    "enviroment": {
+      "prod": {
+        "client": {
+          "ip": "127.0.0.1",
+          "port": 4000,
+          "timeout": 500,
+          "keepAlive": true
+        },
+        "server": {
+          "port": 4000
+        },
+        "page": {
+          "port": 5233
+        }
+      }
+    }
+  },
   "dependencies": {
     "easy_sock": "^0.4.1",
     "koa": "^2.15.3",
     "koa-mount": "^4.0.0",
     "koa-static": "^5.0.0",
     "protocol-buffers": "^5.0.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "module-alias": "^2.2.3"
+  },
+  "_moduleAliases": {
+    "@service": "./service",
+    "@tool": "./tool",
+    "@root": ".",
+    "@template": "./template",
+    "@proto": "./service/proto/"
   }
 }

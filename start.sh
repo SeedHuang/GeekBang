@@ -28,4 +28,4 @@ else
     echo "No node process found listening on port 5233"  
 fi
 
-nodemon index.js
+cross-env enviroment=prod nodemon module-alias/register index.js

@@ -1,5 +1,6 @@
 const net = require('net');
-
+const { getEnv } = require('@tool/env');
+const serverPort = getEnv('server').port;
 module.exports = class RPC {
     constructor({ encodeResponse, decodeRequest, isCompleteRequest }) {
         this.encodeResponse = encodeResponse;
@@ -10,7 +11,7 @@ module.exports = class RPC {
         let buffer = null;
         const tcpServer = net.createServer(socket => {
             socket.on('data', data => {
-                console.log('SERVER has got data')
+                console.log('[RPC CORE]: ON GETDATA:', data);
                 // 不断地拼接buff
                 if((buffer && buffer.length > 0)) {
                     buffer = Buffer.concat([buffer, data]);
@@ -70,12 +71,12 @@ module.exports = class RPC {
                 }                
             });
         });
-
-        return {
-            listen() {
-                console.log('PORT 4000: is Listening ....');
-                tcpServer.listen.apply(tcpServer, arguments)
+        tcpServer.listen(serverPort, (err)=>{
+            if(err) {
+                console.log(`[SERVER RPC-SERVER ERROR]`,err);
+            } else {
+                console.log(`[SERVER RPC-SERVER] is running on PORT:${serverPort}`)
             }
-        }
+        });
     }
 }

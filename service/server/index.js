@@ -1,11 +1,12 @@
 const fs = require('fs');
-const protobuf = require('protocol-buffers');
-const schemas = protobuf(fs.readFileSync(`${__dirname}/../proto/detail.proto`));
-
-const server = require('./detail')(schemas.DetailRequest, schemas.DetailResponse);
-console.log('Loading Service ??????');
+const schemas = require('@proto')('detail.proto');
+const server = require('@service/server/detail')(schemas.DetailRequest, schemas.DetailResponse);
+const { getEnv } = require('@tool/env');
+/**
+ * this method is using to creating server
+*/
 module.exports = () => {
-    console.log('1> Creating Server ....');
+    console.log('[SERVER]: Create Server Instance')
     server.createServer((request, response) => {
         const id = request.body;
         response.end({
@@ -13,7 +14,5 @@ module.exports = () => {
             name: 'One Piece',
             price: 25
         });
-    }).listen(4000, () => {
-        console.log(`SERVER IS RUNNING ON PORT:>>>>>`);
-    })    
+    });
 };

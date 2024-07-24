@@ -1,3 +1,4 @@
+require('module-alias/register') //如果想使用module-alias方法，首先要在启动script里面添加register，可查看本项目start.sh，同时需要将module-alias/register在入口项目中首先引用
 const koa = require('koa');
 const fs = require('fs');
 const mount = require('koa-mount');
@@ -5,9 +6,10 @@ const koaStatic = require('koa-static');
 const path = require('path');
 
 const vm = require('vm');
-const clientRun = require('./service/client/detail');
-const serverRun = require('./service/server');
-const { getTemplate } = require('./tool');
+const clientRun = require('@service/client');
+const serverRun = require('@service/server');
+const getTemplate = require('@template');
+
 let clientApp = null;
 const sendRequest = async (parameter) => {
     return new Promise((resolve , reject)=> {
@@ -49,7 +51,6 @@ app.use(
                     const result = await sendRequest({ id });
                     console.log('get result', result);
                     const html = vm.runInNewContext(getTemplate('detail.html'), result);
-                    console.log('get html', html);
                     ctx.body = html;
                 } catch(e) {
                     console.error(`We got an Error ${e}`);
@@ -65,7 +66,6 @@ app.listen(5233, ()=> {
     console.log('client is listening on 5233 for html')
 });
 serverRun();
-
 
 console.log('PORT4000 start run...');
 setTimeout(()=> {
