@@ -4,9 +4,8 @@ const { config: {enviroment} } = require(`@root/package.json`);
 const schemas = require('@proto')('detail.proto');
 
 module.exports = () => {
-    console.log(enviroment);
     const env = process.env.enviroment;
-    
+    console.log(`[CLIENT][ENV]${env}`);
     const easySock = new EasySock(enviroment[env].client);
     
     easySock.encode = function(data, seq) {
@@ -18,7 +17,7 @@ module.exports = () => {
     };
     
     easySock.decode = function(buffer) {
-        console.log('deeeeeeeeeecoding....', buffer);
+        console.log('[CLIENT]Socket Decode', buffer);
         const seq = buffer.readUInt32BE();
         const body = schemas.DetailResponse.decode(buffer.slice(8));
         return {
@@ -29,16 +28,17 @@ module.exports = () => {
     
     easySock.isReceiveComplete = (buffer) => {
         // 如果小于8，则小于head
+        // 一个完整的请求提包含head和body，head占8位，body占8位，head包含4位存储seq，4位存储body长度，body则是请求的内容，如果所以小于bodyLength + 8的意思是就是没有完整的body和head
         if(buffer.length < 8) {
             return 0;
         }
         const bodyLength = buffer.readUInt32BE(4);
     
         if(buffer.length >= bodyLength + 8) {
-            console.log('client:is complete:', bodyLength + 8);
+            console.log('[CLIENT]Socket is complete', bodyLength + 8);
             return bodyLength + 8;
         } else {
-            console.log('client:is complete:', 0);
+            console.log('[CLIENT]Socket is not complete', 0);
             return 0;
         }
     };

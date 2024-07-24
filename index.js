@@ -1,15 +1,14 @@
 require('module-alias/register') //如果想使用module-alias方法，首先要在启动script里面添加register，可查看本项目start.sh，同时需要将module-alias/register在入口项目中首先引用
 const koa = require('koa');
-const fs = require('fs');
 const mount = require('koa-mount');
 const koaStatic = require('koa-static');
-const path = require('path');
-
-const vm = require('vm');
 const clientRun = require('@service/client');
 const serverRun = require('@service/server');
-const getTemplate = require('@template');
+const { useTemplate } = require('@tool');
+const { getEnv } = require('@tool/env');
 
+
+const clientPort = getEnv('page').port;
 let clientApp = null;
 const sendRequest = async (parameter) => {
     return new Promise((resolve , reject)=> {
@@ -42,19 +41,18 @@ app.use(
         '/detail.html',
         async (ctx) => {
             if(clientApp) {
-                console.log('In Client App')
+                console.log(`[APP][ROUNT][PAGE][DETAIL]`)
                 try {
                     const { id } = ctx.query;
                     if(!id) {
                         throw new Error('This page missing query id');
                     }
                     const result = await sendRequest({ id });
-                    console.log('get result', result);
-                    const html = vm.runInNewContext(getTemplate('detail.html'), result);
+                    const html = useTemplate('detail.html', result);
                     ctx.body = html;
                 } catch(e) {
-                    console.error(`We got an Error ${e}`);
-                    const html = vm.runInNewContext(getTemplate('error.html'), {message: e});
+                    console.error(`[APP][ROUNT][PAGE][DETAIL]We got an Error ${e}`);
+                    const html = useTemplate('error.html', {message: e});
                     ctx.body = html;
                 }
             }
@@ -62,13 +60,12 @@ app.use(
     )
 );
 // listen on 5233 for html
-app.listen(5233, ()=> {
-    console.log('client is listening on 5233 for html')
+app.listen(clientPort, ()=> {
+    console.log(`[APP][PORT]${clientPort}`);
 });
+
 serverRun();
 
-console.log('PORT4000 start run...');
 setTimeout(()=> {
     clientApp =  clientRun();
-    console.log('PORT 3000 client start run...');
 },1000);

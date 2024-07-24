@@ -14,7 +14,7 @@
         "client": {
           "ip": "127.0.0.1",
           "port": 4000,
-          "timeout": 500,
+          "timeout": 5000,
           "keepAlive": true
         },
         "server": {
@@ -42,6 +42,7 @@
     "@tool": "./tool",
     "@root": ".",
     "@template": "./template",
-    "@proto": "./service/proto/"
+    "@proto": "./service/proto",
+    "@dataSource": "./dataSource"
   }
 }

@@ -11,7 +11,7 @@ module.exports = class RPC {
         let buffer = null;
         const tcpServer = net.createServer(socket => {
             socket.on('data', data => {
-                console.log('[RPC CORE]: ON GETDATA:', data);
+                console.log('[SERVER][RPCCORE]: ON GETDATA:', data);
                 // 不断地拼接buff
                 if((buffer && buffer.length > 0)) {
                     buffer = Buffer.concat([buffer, data]);
@@ -73,9 +73,9 @@ module.exports = class RPC {
         });
         tcpServer.listen(serverPort, (err)=>{
             if(err) {
-                console.log(`[SERVER RPC-SERVER ERROR]`,err);
+                console.log(`[SERVER][RPCCORE ERROR]`,err);
             } else {
-                console.log(`[SERVER RPC-SERVER] is running on PORT:${serverPort}`)
+                console.log(`[SERVER][RPCCORE] is running on PORT:${serverPort}`)
             }
         });
     }

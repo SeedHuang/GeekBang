@@ -1,0 +1,17 @@
+{
+    "spus": [
+        {
+            "id": 1,
+            "name": "[余量预售]S-FIRE fuwa petit VOCALOID 初音未来 Q版手办",
+            "price": 20,
+            "headImage": "//i0.hdslb.com/bfs/mall/mall/9f/f8/9ff8e76106e3250e2b7dc444c24c24b7.png@800w_800h.webp"
+        },
+        {
+            "id": 2,
+            "name": "[余量预售]GSC 孤独摇滚！ 喜多郁代 比例手办",
+            "price": 106,
+            "headImage": "//i0.hdslb.com/bfs/mall/mall/d3/79/d3798193bf326c25a03d54295aedc593.png@800w_800h.webp"
+        }
+    ]
+    
+}
