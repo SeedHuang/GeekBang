@@ -1,31 +1,43 @@
 const fs = require('fs');
 const schemas = require('@proto')('detail.proto');
-const server = require('@service/server/detail')(schemas.DetailRequest, schemas.DetailResponse);
+const RPC = require('@service/server/rpc-server');
 const { spus } = require('@dataSource/spus.json');
 /**
  * this method is using to creating server
 */
 module.exports = () => {
     console.log('[SERVER]Create Server Instance')
-    server.createServer((request, response) => {
-        const { id } = request.body;
-
-        if(id) {
-            const target = spus.filter(spu => {
-                if(spu.id === +id) {
-                    return true;
-                } else {
-                    return false;
+    const server = new RPC({
+        protobufRequestSchema:schemas.DetailRequest, 
+        protobufResponseSchema:schemas.DetailResponse
+    });
+    server.createServer(async (request, response) => {
+        try {
+            const result = await new Promise((resolve, reject)=> {
+                const { id } = request.body;
+                if(id) {
+                    setTimeout(()=>{
+                        const target = spus.filter(spu => {
+                            if(spu.id === +id) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        });
+                        if (target.length > 0) {
+                            resolve(target[0]);    
+                        } else {
+                            reject(`There aren't this spu`);
+                        }
+                    },1000)
                 }
-            })
-            if (target.length > 0) {
-                const spu = target[0];
-                console.log('SPU is', spu);
-                response.end(spu); 
-            } else {
-                
-            }
+            });
+            response.end(result);
+        } catch(e) {
+            console.log(e, '??????');
         }
+        
+        
         
     });
 };

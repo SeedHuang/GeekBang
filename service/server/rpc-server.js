@@ -2,10 +2,29 @@ const net = require('net');
 const { getEnv } = require('@tool/env');
 const serverPort = getEnv('server').port;
 module.exports = class RPC {
-    constructor({ encodeResponse, decodeRequest, isCompleteRequest }) {
-        this.encodeResponse = encodeResponse;
-        this.decodeRequest = decodeRequest;
-        this.isCompleteRequest = isCompleteRequest;
+    constructor({ protobufRequestSchema, protobufResponseSchema }) {
+        this.protobufRequestSchema = protobufRequestSchema;
+        this.protobufResponseSchema = protobufResponseSchema;
+    }
+    decodeRequest(buffer) {
+        console.log('[SERVER][DETAIL] Decode Request');
+        const seq = buffer.readUInt32BE(); // 在没有参数逇情况，相当于参数为0，意思就是说，读第一个UInt32
+        return {
+            seq,
+            result: this.protobufRequestSchema.decode(buffer.slice(8))
+        }
+    }
+    isCompleteRequest(buffer) {
+        const bodyLength = buffer.readUInt32BE(4);
+        return 8 + bodyLength; //其实就是16
+    }
+    encodeResponse(data, seq) {
+        console.log('[SERVER][DETAIL] Encode Response');
+        const head = Buffer.alloc(8);
+        const body = this.protobufResponseSchema.encode(data);
+        head.writeUInt32BE(seq);
+        head.writeUInt32BE(body.length, 4);
+        return Buffer.concat([head,body]); 
     }
     createServer(callback) {
         let buffer = null;
